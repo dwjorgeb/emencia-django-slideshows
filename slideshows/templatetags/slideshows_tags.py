@@ -3,6 +3,7 @@
 Template tags
 """
 from django import template
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.shortcuts import get_object_or_404
 from django.utils.six import string_types
@@ -71,14 +72,12 @@ class SlideshowFragment(template.Node):
         if not used_config:
             return ""
 
-        t = template.loader.get_template(used_config)
         context.update({
             'slideshow_instance': instance,
             'slideshow_slides': instance.get_published_slides(),
         })
-        content = t.render(template.Context(context))
 
-        return content
+        return render_to_string(used_config, context)
 
     def get_content_render(self, context, instance):
         """
@@ -97,15 +96,13 @@ class SlideshowFragment(template.Node):
 
         used_template = self.custom_template or instance.template
 
-        t = template.loader.get_template(used_template)
         context.update({
             'slideshow_js_config': mark_safe(js_config),
             'slideshow_instance': instance,
             'slideshow_slides': instance.get_published_slides(),
         })
-        content = t.render(template.Context(context))
 
-        return content
+        return render_to_string(used_template, context)
 
 
 @register.tag(name="slideshow_render")
