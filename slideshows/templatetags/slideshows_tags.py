@@ -72,12 +72,12 @@ class SlideshowFragment(template.Node):
         if not used_config:
             return ""
 
-        context.update({
+        ctx = {
             'slideshow_instance': instance,
             'slideshow_slides': instance.get_published_slides(),
-        })
+        }
 
-        return render_to_string(used_config, context)
+        return render_to_string(used_config, ctx)
 
     def get_content_render(self, context, instance):
         """
@@ -96,13 +96,13 @@ class SlideshowFragment(template.Node):
 
         used_template = self.custom_template or instance.template
 
-        context.update({
+        ctx = {
             'slideshow_js_config': mark_safe(js_config),
             'slideshow_instance': instance,
             'slideshow_slides': instance.get_published_slides(),
-        })
+        }
 
-        return render_to_string(used_template, context)
+        return render_to_string(used_template, ctx)
 
 
 @register.tag(name="slideshow_render")
